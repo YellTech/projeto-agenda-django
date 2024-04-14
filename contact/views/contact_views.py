@@ -1,9 +1,28 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from contact.models import Contact
 
 
 
 def index(request):
+    contacts = Contact.objects.all().order_by('-id')
+
+    context = {
+        'contacts': contacts,
+    }
+
+    return render(
+        request,
+        'contact/index.html',
+        context
+    )
+
+def search(request):
+
+    search_value = request.GET.get('q', '').strip()
+
+    if search_value == '':
+        return redirect('contact:index')
+
     contacts = Contact.objects.all().order_by('-id')
 
     context = {
